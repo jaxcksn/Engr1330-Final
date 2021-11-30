@@ -63,7 +63,7 @@
     <div class="container">
     <div class="row">
     <h2>Concrete Compression Strength Prediction Tool</h2>
-    <h4>Input Mixture Components:</h4>
+    <h5>Input Mixture Components:</h5>
     </div>
     <form id="input-form">
         <div class="row">
@@ -107,7 +107,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="six columns"><button type="button" class="button-primary" onclick="sendValues()">Submit</button>
+            <div class="six columns"><button type="button" class="button-primary" onclick="sendValues()">Predict</button>
                 <button type="button" class="button" onclick="clearValues()">Clear</button></div>
             <div class="six columns"><h4 style="color: #1EAEDB">Predicted Concrete Value: <span style="color: black"><span id='predictionValue'>0</span> MPa</span></h4></div>
         
@@ -121,7 +121,7 @@
         <div>
         <label for="CCS">Observed CCS:</label>
         <input type="number" id="CCS" name="CCS" value="0"/>
-        <button type="button" class="button-primary" onclick="sendUpdate()">Submit</button>
+        <button type="button" class="button-primary" onclick="sendUpdate()">Update</button>
         </div>
     </div>
 </div>
