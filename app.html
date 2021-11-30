@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="/eel.js"></script>
+    <script>
+        eel.expose(sendAlert)
+        function sendAlert(text) {
+            window.alert(text)
+        }    
+    </script>
+    <title>Final Project - Team 6</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <button onclick="eel.testPythonConnection()">Test Python Connection</button>
+</body>
+</html>
