@@ -1,10 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
-  
+    <style>
+        .content {
+            display: none;
+            border-top: none;
+            margin-top: 1.5rem;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .tabs {
+            overflow: hidden;
+            border-bottom: 1px solid #ccc;
+
+        }
+
+        .tab-btn {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            height: auto;
+            transition: 0.3s;
+            margin-bottom: 0;
+        }
+
+        .tab-btn.active {
+            color: #1EAEDB;
+        }
+
+        .overlay {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            z-index: 45;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(30, 175, 219);
+            position: absolute;
+            left: 0;
+            top: 0;
+            -webkit-animation: fadeIn 1s;
+            animation: fadeIn 1s;
+        }
+
+
+        .overlay h4 {
+            color: white;
+        }
+
+        .spinner {
+            width: 75px;
+            height: 75px;
+            display: inline-block;
+            border-width: 2px;
+            border-color: rgba(30, 175, 219, 0.5);
+            border-top-color: #fff;
+            animation: spin 1s infinite linear;
+            border-radius: 100%;
+            border-style: solid;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
     <script type="text/javascript" src="/eel.js"></script>
     <script>
         function sendValues() {
@@ -18,112 +109,201 @@
             let FA = Number(document.getElementById('FA').value);
             let A = Number(document.getElementById('A').value);
 
-            eel.predictValue(CMT,BFS,ASH,H2O,SP,CA,FA,A)
+            eel.predictValue(CMT, BFS, ASH, H2O, SP, CA, FA, A)
         }
 
         function sendUpdate() {
-
-            let CMT = Number(document.getElementById('CMT').value);
-            let BFS = Number(document.getElementById('BFS').value);
-            let ASH = Number(document.getElementById('ASH').value);
-            let H2O = Number(document.getElementById('H2O').value);
-            let SP = Number(document.getElementById('SP').value);
-            let CA = Number(document.getElementById('CA').value);
-            let FA = Number(document.getElementById('FA').value);
-            let A = Number(document.getElementById('A').value);
+            document.getElementById('overlay').style.display = 'flex'
+            let CMT = Number(document.getElementById('CMT2').value);
+            let BFS = Number(document.getElementById('BFS2').value);
+            let ASH = Number(document.getElementById('ASH2').value);
+            let H2O = Number(document.getElementById('H2O2').value);
+            let SP = Number(document.getElementById('SP2').value);
+            let CA = Number(document.getElementById('CA2').value);
+            let FA = Number(document.getElementById('FA2').value);
+            let A = Number(document.getElementById('A2').value);
             let CCS = Number(document.getElementById('CCS').value);
 
-            eel.updateValues(CMT,BFS,ASH,H2O,SP,CA,FA,A,CCS)
+            eel.updateValues(CMT, BFS, ASH, H2O, SP, CA, FA, A, CCS)
+        }
+
+        eel.expose(confirmUpdate)
+        function confirmUpdate() {
+            document.getElementById('CMT2').value = 0;
+            document.getElementById('BFS2').value = 0;
+            document.getElementById('ASH2').value = 0;
+            document.getElementById('H2O2').value = 0;
+            document.getElementById('SP2').value = 0;
+            document.getElementById('CA2').value = 0;
+            document.getElementById('FA2').value = 0;
+            document.getElementById('A2').value = 0;
+            document.getElementById('CCS').value = 0;
+            setTimeout(() => { document.getElementById('overlay').style.display = 'none' }, 1500)
         }
 
         function clearValues() {
 
-            let CMT = document.getElementById('CMT').value  = 0;
-            let BFS = document.getElementById('BFS').value  = 0;
-            let ASH = document.getElementById('ASH').value  = 0;
-            let H2O = document.getElementById('H2O').value  = 0;
-            let SP = document.getElementById('SP').value  = 0;
-            let CA = document.getElementById('CA').value  = 0;
-            let FA = document.getElementById('FA').value  = 0;
-            let A = document.getElementById('A').value = 0;
-            let CCS = document.getElementById('CCS').value = 0;
-
+            document.getElementById('CMT').value = 0;
+            document.getElementById('BFS').value = 0;
+            document.getElementById('ASH').value = 0;
+            document.getElementById('H2O').value = 0;
+            document.getElementById('SP').value = 0;
+            document.getElementById('CA').value = 0;
+            document.getElementById('FA').value = 0;
+            document.getElementById('A').value = 0;
             document.getElementById('predictionValue').innerHTML = '0'
+
         }
 
         eel.expose(setPrediction)
         function setPrediction(value) {
             document.getElementById('predictionValue').innerHTML = value
-        } 
+        }
+
+        function changeContent(e, id) {
+            tabs = document.getElementsByClassName('tab-btn')
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            content = document.getElementsByClassName('row content')
+            for (var i = 0; i < content.length; i++) {
+                content[i].className = content[i].className.replace(" active", "")
+            }
+            document.getElementById(id).className += ' active';
+            e.currentTarget.className += " active"
+        }
 
     </script>
     <title>Final Project - Team 6</title>
 </head>
+
 <body>
+    <div class="overlay" id='overlay'>
+        <span class="spinner"></span>
+        <H4>Sending Update to Database</H4>
+    </div>
     <div class="container">
-    <div class="row">
-    <h2>Concrete Compression Strength Prediction Tool</h2>
-    <h5>Input Mixture Components:</h5>
+        <div class="row" style="margin-top: 10vh">
+            <h2>Concrete Compression Strength Prediction Tool</h2>
+            <div class="tabs">
+                <button class="tab-btn active" id="default" onclick="changeContent(event,'calculate')">Predict
+                    Values</button>
+                <button class="tab-btn" onclick="changeContent(event,'update')">Update Database</button>
+            </div>
+        </div>
+        <div class="row content active" style="height: 95%;" id="calculate">
+            <form id="input-form">
+                <div class="row">
+                    <div class="six columns">
+                        <label for="CMT">Cement (KG):</label>
+                        <input class='u-full-width' type="number" id="CMT" name="CMT" value="175" step="0.1" />
+                    </div>
+                    <div class="six columns">
+                        <label for="BFS">Blast Furnace Slag (KG):</label>
+                        <input class='u-full-width' type="number" id="BFS" name="BFS" value="13" step="0.1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="ASH">Fly Ash (KG):</label>
+                        <input class='u-full-width' type="number" id="ASH" name="ASH" value="172" step="0.1" />
+                    </div>
+                    <div class="six columns">
+                        <label for="H2O">Water (KG):</label>
+                        <input class='u-full-width' type="number" id="H2O" name="H2O" value="156" step="0.1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="SP">Superplasticizer (KG):</label>
+                        <input class='u-full-width' type="number" id="SP" name="SP" value="4" step="0.01" />
+                    </div>
+                    <div class="six columns">
+                        <label for="CA">Coarse Aggregate (KG):</label>
+                        <input class='u-full-width' type="number" id="CA" name="CA" value="1000" step="0.1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="FA">Fine Aggregate (KG):</label>
+                        <input class='u-full-width' type="number" id="FA" name="FA" value="856" step="0.1" />
+                    </div>
+                    <div class="six columns">
+                        <label for="A">Age (Days):</label>
+                        <input class='u-full-width' type="number" id="A" name="A" value="3" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns"><button type="button" class="button-primary"
+                            onclick="sendValues()">Predict</button>
+                        <button type="button" class="button" onclick="clearValues()">Clear</button>
+                    </div>
+                    <div class="six columns">
+                        <h4 style="color: #1EAEDB">Predicted CCS Value: <span style="color: black"><span
+                                    id='predictionValue'>0</span> MPa</span></h4>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div class="row content" style="height: 95%;" id="update">
+            <form id="input-form">
+                <div class="row">
+                    <div class="six columns">
+                        <label for="CMT">Cement (KG):</label>
+                        <input class='u-full-width' type="number" id="CMT2" name="CMT" value="175" step="0.1" />
+                    </div>
+                    <div class="six columns">
+                        <label for="BFS">Blast Furnace Slag (KG):</label>
+                        <input class='u-full-width' type="number" id="BFS2" name="BFS" value="13" step="0.1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="ASH">Fly Ash (KG):</label>
+                        <input class='u-full-width' type="number" id="ASH2" name="ASH" value="172" step="0.1" />
+                    </div>
+                    <div class="six columns">
+                        <label for="H2O">Water (KG):</label>
+                        <input class='u-full-width' type="number" id="H2O2" name="H2O" value="156" step="0.1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="SP">Superplasticizer (KG):</label>
+                        <input class='u-full-width' type="number" id="SP2" name="SP" value="4" step="0.01" />
+                    </div>
+                    <div class="six columns">
+                        <label for="CA">Coarse Aggregate (KG):</label>
+                        <input class='u-full-width' type="number" id="CA2" name="CA" value="1000" step="0.1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="FA">Fine Aggregate (KG):</label>
+                        <input class='u-full-width' type="number" id="FA2" name="FA" value="856" step="0.1" />
+                    </div>
+                    <div class="six columns">
+                        <label for="A">Age (Days):</label>
+                        <input class='u-full-width' type="number" id="A2" name="A" value="3" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="CCS">Observed CCS:</label>
+                        <input type="number" class="u-full-width" id="CCS" name="CCS" value="0" />
+                    </div>
+                    <div class="six columns">
+                        <label for="update">&emsp;</label>
+                        <button type="button" name="update" class="button-primary u-full-width"
+                            onclick="sendUpdate()">Update</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
     </div>
-    <form id="input-form">
-        <div class="row">
-            <div class="six columns">
-                <label for="CMT">Cement (KG):</label>
-                <input class='u-full-width' type="number" id="CMT" name="CMT" value="175" step="0.1"/>
-            </div>
-            <div class="six columns">
-                <label for="BFS">Blast Furnace Slag (KG):</label>
-                <input class='u-full-width' type="number" id="BFS" name="BFS" value="13" step="0.1"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="six columns">
-                <label for="ASH">Fly Ash (KG):</label>
-                <input class='u-full-width' type="number" id="ASH" name="ASH" value="172" step="0.1"/>
-            </div>
-            <div class="six columns">
-                <label for="H2O">Water (KG):</label>
-                <input class='u-full-width' type="number" id="H2O" name="H2O" value="156" step="0.1"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="six columns">
-                <label for="SP">Superplasticizer (KG):</label>
-                <input class='u-full-width' type="number" id="SP" name="SP" value="4" step="0.01"/>
-            </div>
-            <div class="six columns">
-                <label for="CA">Coarse Aggregate (KG):</label>
-                <input class='u-full-width' type="number" id="CA" name="CA" value="1000" step="0.1"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="six columns">
-                <label for="FA">Fine Aggregate (KG):</label>
-                <input  class='u-full-width' type="number" id="FA" name="FA" value="856" step="0.1"/>
-            </div>
-            <div class="six columns">
-                <label for="A">Age (Days):</label>
-                <input class='u-full-width' type="number" id="A" name="A" value="3"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="six columns"><button type="button" class="button-primary" onclick="sendValues()">Predict</button>
-                <button type="button" class="button" onclick="clearValues()">Clear</button></div>
-            <div class="six columns"><h4 style="color: #1EAEDB">Predicted Concrete Value: <span style="color: black"><span id='predictionValue'>0</span> MPa</span></h4></div>
-        
-        </div>
-    </form>
-    <div class="row">
-        
-    </div>
-    <div class="row">
-        <h5> Update Database with Observed Value:</h5>
-        <div>
-        <label for="CCS">Observed CCS:</label>
-        <input type="number" id="CCS" name="CCS" value="0"/>
-        <button type="button" class="button-primary" onclick="sendUpdate()">Update</button>
-        </div>
-    </div>
-</div>
 </body>
+
 </html>
